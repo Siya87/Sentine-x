@@ -1,4 +1,4 @@
-# Absolute minimal requirements for Render deployment
+# Minimal requirements for Railway deployment
 # Core Dependencies
 fastapi==0.115.9
 uvicorn[standard]==0.34.0
@@ -8,9 +8,9 @@ python-multipart==0.0.20
 pydantic==2.10.3
 pydantic-settings==2.7.0
 
-# Database
+# Database - Fixed version conflict
 motor==3.6.0
-pymongo==4.8.0
+pymongo>=4.9,<4.10
 
 # Environment and Config
 python-dotenv==1.0.1
