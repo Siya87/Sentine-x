@@ -1,0 +1,10 @@
+{
+  "extends": ["react-app"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-unused-vars": "warn"
+  }
+}
+
+// Made with Bob
