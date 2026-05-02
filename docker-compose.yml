@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sentinelx-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # MongoDB
+      - MONGODB_URI=${MONGODB_URI}
+      
+      # IBM Watsonx AI
+      - WATSONX_API_KEY=${WATSONX_API_KEY}
+      - WATSONX_PROJECT_ID=${WATSONX_PROJECT_ID}
+      - WATSONX_URL=${WATSONX_URL:-https://us-south.ml.cloud.ibm.com}
+      
+      # Security APIs
+      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY}
+      - SHODAN_API_KEY=${SHODAN_API_KEY}
+      - ABUSEIPDB_API_KEY=${ABUSEIPDB_API_KEY}
+      - HAVEIBEENPWNED_API_KEY=${HAVEIBEENPWNED_API_KEY}
+      
+      # Application
+      - DEBUG=${DEBUG:-false}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost}
+    restart: unless-stopped
+    networks:
+      - sentinelx-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sentinelx-frontend
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:8000}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - sentinelx-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+networks:
+  sentinelx-network:
+    driver: bridge
+    name: sentinelx-network
+
+# Optional: Add MongoDB service if not using Atlas
+# Uncomment below to run MongoDB locally
+#
+# services:
+#   mongodb:
+#     image: mongo:7.0
+#     container_name: sentinelx-mongodb
+#     ports:
+#       - "27017:27017"
+#     environment:
+#       - MONGO_INITDB_ROOT_USERNAME=admin
+#       - MONGO_INITDB_ROOT_PASSWORD=password
+#       - MONGO_INITDB_DATABASE=sentinelx
+#     volumes:
+#       - mongodb_data:/data/db
+#     networks:
+#       - sentinelx-network
+#     restart: unless-stopped
+#
+# volumes:
+#   mongodb_data:
+#     driver: local
+
+# Made with Bob
