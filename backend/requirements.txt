@@ -1,4 +1,4 @@
-# Minimal requirements for Render deployment
+# Absolute minimal requirements for Render deployment
 # Core Dependencies
 fastapi==0.115.9
 uvicorn[standard]==0.34.0
@@ -19,15 +19,6 @@ python-dotenv==1.0.1
 aiohttp==3.11.11
 httpx==0.28.1
 requests==2.32.3
-
-# AI and ML - Using versions compatible with Python 3.11
-langchain==0.1.20
-langchain-community==0.0.38
-sentence-transformers==2.7.0
-
-# IBM Watson - Compatible versions
-ibm-watsonx-ai==0.2.5
-ibm-cloud-sdk-core==3.20.6
 
 # PDF Generation
 reportlab==4.2.5
