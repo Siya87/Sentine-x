@@ -30,7 +30,8 @@ const Dashboard: React.FC = () => {
       
       // Fetch recent activity
       const recentActivity = await dashboardAPI.getRecentActivity(10);
-      setActivityData(recentActivity);
+      // Handle both array and object responses
+      setActivityData(Array.isArray(recentActivity) ? recentActivity : (recentActivity?.activities || []));
       
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -50,7 +51,8 @@ const Dashboard: React.FC = () => {
       setStatsData(overviewData);
       
       const recentActivity = await dashboardAPI.getRecentActivity(10);
-      setActivityData(recentActivity);
+      // Handle both array and object responses
+      setActivityData(Array.isArray(recentActivity) ? recentActivity : (recentActivity?.activities || []));
       
       toast.success('Dashboard refreshed successfully');
     } catch (error) {
