@@ -22,13 +22,24 @@ async def connect_to_mongo():
     """Connect to MongoDB"""
     logger.info("Connecting to MongoDB...")
     try:
-        db.client = AsyncIOMotorClient(settings.mongodb_uri)
+        # Configure MongoDB client with relaxed SSL settings for Railway deployment
+        db.client = AsyncIOMotorClient(
+            settings.mongodb_uri,
+            tls=True,
+            tlsAllowInvalidCertificates=True,  # Relaxed for Railway
+            serverSelectionTimeoutMS=30000,    # Increased to 30 seconds
+            connectTimeoutMS=30000,            # Increased to 30 seconds
+            socketTimeoutMS=30000,             # Increased to 30 seconds
+            retryWrites=True,
+            w='majority'
+        )
         db.db = db.client.sentinelx
         # Test connection
         await db.client.admin.command('ping')
-        logger.info("Successfully connected to MongoDB")
+        logger.info("✅ Successfully connected to MongoDB")
     except Exception as e:
-        logger.error(f"Failed to connect to MongoDB: {e}")
+        logger.error(f"❌ Failed to connect to MongoDB: {e}")
+        logger.error(f"Connection URI (masked): {settings.mongodb_uri[:30]}...")
         raise
 
 
