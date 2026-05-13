@@ -383,7 +383,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**Built with ❤️ using IBM Granite AI**
 
 [Website](https://sentinelx-ai.com) • [Documentation](docs/) • [Demo](https://demo.sentinelx-ai.com)
 
